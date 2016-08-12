@@ -3,14 +3,11 @@ module Api
 		class ItemsController < ApplicationController
 			before_action :set_item, only: [:show, :update, :destroy]
 
-			# GET /items
 			def index
 				@items = Item.all
-
 				render json: @items
 			end
 
-			# GET /items/1
 			def show
 				render json: @item
 			end
@@ -41,9 +38,11 @@ module Api
 			end
 
 			private
-			# Use callbacks to share common setup or constraints between actions.
+
 			def set_item
 				@item = Item.find(params[:id])
+			rescue ActiveRecord::RecordNotFound => e
+				return render json: { message: 'user id not found' }, status: :not_found
 			end
 
 			# Only allow a trusted parameter "white list" through.
