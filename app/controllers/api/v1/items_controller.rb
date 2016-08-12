@@ -1,3 +1,4 @@
+require 'pry'
 module Api
 	module V1
 		class ItemsController < ApplicationController
@@ -12,12 +13,10 @@ module Api
 				render json: @item
 			end
 
-			# POST /items
 			def create
 				@item = Item.new(item_params)
-
 				if @item.save
-					render json: @item, status: :created, location: @item
+					render json: @item, status: :created
 				else
 					render json: @item.errors, status: :unprocessable_entity
 				end
@@ -42,10 +41,9 @@ module Api
 			def set_item
 				@item = Item.find(params[:id])
 			rescue ActiveRecord::RecordNotFound => e
-				return render json: { message: 'user id not found' }, status: :not_found
+				return render json: { error: { status: 404, message: 'item not found' }}, status: :not_found
 			end
 
-			# Only allow a trusted parameter "white list" through.
 			def item_params
 				params.require(:item).permit(:name)
 			end
