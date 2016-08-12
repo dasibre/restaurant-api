@@ -7,27 +7,37 @@ RSpec.describe 'Items', type: :request do
 		post '/api/v1/items', params: params
 	end
 
-	def api_get(params)
-		get '/api/v1/items', params: params
-	end
-
 	def json_parse(json)
 		JSON.parse(json)
 	end
 
+	describe 'DELETE /api/v1/items/:id' do
+		it 'deletes the specified item' do
+			create(:item, name: 'Hamburger')
+			delete '/api/v1/items/1'
+			expect(response).to have_http_status(204)
+		end
+	end
+
+	describe 'PUT /api/v1/items/:id' do
+		it 'updates the specified item' do
+			params = { item: { name: 'Whopper' } }
+			item = create(:item, name: 'Hamburger')
+			put "/api/v1/items/#{item.id}", params: params
+			body = json_parse(response.body)
+			expect(body['name']).to eq('Whopper')
+		end
+	end
+
 	describe 'POST /api/v1/items' do
 		it 'creates the specified item' do
-			params = {
-					item: { name: 'Fried Rice'}
-			}
+			params = { item: { name: 'Fried Rice' } }
 			api_post(params)
 			expect(response).to have_http_status(201)
 		end
 
 		it 'returns created item' do
-			params = {
-					item: { name: 'Fried Rice'}
-			}
+			params = { item: { name: 'Fried Rice'} }
 			api_post(params)
 			body = json_parse(response.body)
 			expect(body['name']).to eq('Fried Rice')
