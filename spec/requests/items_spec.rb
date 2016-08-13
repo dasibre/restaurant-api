@@ -1,5 +1,5 @@
 require 'rails_helper'
-require 'pry'
+
 RSpec.describe 'Items', type: :request do
 
 	def json_parse(json)
@@ -32,7 +32,7 @@ RSpec.describe 'Items', type: :request do
 		end
 	end
 
-	describe 'POST /api/v1/items' do
+	describe 'POST /endpoint/' do
 		it 'creates the specified item' do
 			params = { item: { name: 'Fried Rice' } }
 			api_post(params)
@@ -47,7 +47,7 @@ RSpec.describe 'Items', type: :request do
 		end
 	end
 
-	describe 'GET Items /api/v1/items' do
+	describe 'GET Items /endpoint/' do
 		it 'responds with 200 success code' do
 			get end_point
 			expect(response).to have_http_status(200)
@@ -61,7 +61,7 @@ RSpec.describe 'Items', type: :request do
 		end
 	end
 
-	describe 'GET item /api/v1/items/:id' do
+	describe 'GET item /endpoint/:id' do
 		context 'when item is not found' do
 			it 'responds with 404 error' do
 				get "#{end_point}/1"
