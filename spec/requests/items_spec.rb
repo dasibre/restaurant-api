@@ -1,29 +1,32 @@
 require 'rails_helper'
 require 'pry'
-
 RSpec.describe 'Items', type: :request do
-
-	def api_post(params)
-		post '/api/v1/items', params: params
-	end
 
 	def json_parse(json)
 		JSON.parse(json)
 	end
 
-	describe 'DELETE /api/v1/items/:id' do
+	def end_point
+		'/api/v1/menu/items'
+	end
+
+	def api_post(params)
+		post end_point, params: params
+	end
+
+	describe 'DELETE /endpoint/:id' do
 		it 'deletes the specified item' do
 			create(:item, name: 'Hamburger')
-			delete '/api/v1/items/1'
+			delete "#{end_point}/1"
 			expect(response).to have_http_status(204)
 		end
 	end
 
-	describe 'PUT /api/v1/items/:id' do
+	describe 'PUT /endpoint/:id' do
 		it 'updates the specified item' do
+			create(:item)
 			params = { item: { name: 'Whopper' } }
-			item = create(:item, name: 'Hamburger')
-			put "/api/v1/items/#{item.id}", params: params
+			put "#{end_point}/1", params: params
 			body = json_parse(response.body)
 			expect(body['name']).to eq('Whopper')
 		end
@@ -46,13 +49,13 @@ RSpec.describe 'Items', type: :request do
 
 	describe 'GET Items /api/v1/items' do
 		it 'responds with 200 success code' do
-			get '/api/v1/items'
+			get end_point
 			expect(response).to have_http_status(200)
 		end
 
 		it 'returns all items' do
 			%w(chicken rice).each {|item_name| create(:item, name: item_name)}
-			get '/api/v1/items'
+			get end_point
 			item_names = json_parse(response.body).map {|item| item['name']}
 			expect(item_names).to eq(['chicken', 'rice'])
 		end
@@ -61,12 +64,12 @@ RSpec.describe 'Items', type: :request do
 	describe 'GET item /api/v1/items/:id' do
 		context 'when item is not found' do
 			it 'responds with 404 error' do
-				get '/api/v1/items/1'
+				get "#{end_point}/1"
 				expect(response).to have_http_status(404)
 			end
 
 			it 'returns item not found response message' do
-				get '/api/v1/items/1'
+				get "#{end_point}/1"
 				body = json_parse(response.body)
 				message = body['error']['message']
 				expect(message).to eq('item not found')
@@ -74,17 +77,20 @@ RSpec.describe 'Items', type: :request do
 		end
 
 		context 'when item is found' do
-			let(:item) { create(:item) }
+
+			before do
+				create(:item)
+			end
 
 			it 'responds with 200 success code' do
-				get "/api/v1/items/#{item.id}"
+				get "#{end_point}/1"
 				expect(response).to have_http_status(200)
 			end
 
 			it 'returns item for given :id' do
-				get "/api/v1/items/#{item.id}"
+				get "#{end_point}/1"
 				item_id = json_parse(response.body)['id']
-				expect(item_id).to eq(item.id)
+				expect(item_id).to eq(1)
 			end
 		end
 	end
