@@ -1,24 +1,7 @@
-# README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Architect and implement and Rails 5 API for a hypothetical restaurant. The API should be able to support Customers, Admin Users (the restaurant owners), Menu Items, and Orders.
+Set up the API to store data with Postgres.
+Implement unit testing for base API methods.
+Include swagger documentation
+Please set up a fresh git repo for this on your personal account, and have everything checked in and shared with us by 11:59 PM this Sunday (August 14).
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
