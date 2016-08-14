@@ -10,7 +10,7 @@ module Api
 
 			describe 'GET #index' do
 				it 'returns http success' do
-					get :index, params: {customer_id: 1, order_id: 1}
+					get :index, params: {customer_id: 1, id: 1}
 					expect(response).to have_http_status(:success)
 				end
 			end
