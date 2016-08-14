@@ -22,7 +22,6 @@ module Api
 				end
 			end
 
-			# PATCH/PUT /items/1
 			def update
 				if @item.update(item_params)
 					render json: @item
@@ -31,7 +30,6 @@ module Api
 				end
 			end
 
-			# DELETE /items/1
 			def destroy
 				@item.destroy
 			end
