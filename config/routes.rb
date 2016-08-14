@@ -1,11 +1,13 @@
 Rails.application.routes.draw do
 	namespace :api do
 		namespace :v1 do
-			resource :menu do
+			concern :itemable do
 				resources :items
+			end
+			resource :menu, concerns: [:itemable]
+			resources :customers do
+				resources :orders, concerns: [:itemable]
 			end
 		end
 	end
-  #resources :items
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
