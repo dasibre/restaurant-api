@@ -10,38 +10,47 @@ RSpec.describe 'Items', type: :request do
 		'/api/v1/menu/items'
 	end
 
-	def api_post(params)
-		post end_point, params: params
-	end
+	describe 'DELETE /api/v1/users/:id/items/:id' do
+		context 'when user not admin' do
+			it 'returns unauthorized status' do
+				create(:item)
+				create(:user)
+				delete '/api/v1/users/1/items/1', params: { item: { id: 1} }
+				expect(response).to have_http_status(401)
+			end
+		end
 
-	describe 'DELETE /endpoint/:id' do
 		it 'deletes the specified item' do
 			create(:item, name: 'Hamburger')
-			delete "#{end_point}/1"
+			create(:user, admin: true)
+			delete '/api/v1/users/1/items/1', params: { user_id: 1 }
 			expect(response).to have_http_status(204)
 		end
 	end
 
-	describe 'PUT /endpoint/:id' do
+	describe 'PUT /api/v1/users/:id/items/:id' do
 		it 'updates the specified item' do
 			create(:item)
+			create(:user, admin: true)
 			params = { item: { name: 'Whopper' } }
-			put "#{end_point}/1", params: params
+			put '/api/v1/users/1/items/1', params: params
 			body = json_parse(response.body)
 			expect(body['name']).to eq('Whopper')
 		end
 	end
 
-	describe 'POST /endpoint/' do
+	describe 'POST /api/v1/users/:id/items' do
 		it 'creates the specified item' do
-			params = { item: { name: 'Fried Rice' } }
-			api_post(params)
+			create(:user, admin: true)
+			params = { user_id: 1, item: { name: 'Fried Rice' } }
+			post '/api/v1/users/1/items', params: params
 			expect(response).to have_http_status(201)
 		end
 
 		it 'returns created item' do
+			create(:user, admin: true)
 			params = { item: { name: 'Fried Rice'} }
-			api_post(params)
+			post '/api/v1/users/1/items', params: params
 			body = json_parse(response.body)
 			expect(body['name']).to eq('Fried Rice')
 		end

@@ -3,6 +3,7 @@ module Api
 	module V1
 		class ItemsController < ApplicationController
 			before_action :set_item, only: [:show, :update, :destroy]
+			before_action :is_admin?, only: [:update, :create, :destroy]
 
 			def index
 				@items = Item.all
@@ -35,6 +36,15 @@ module Api
 			end
 
 			private
+
+			def is_admin?
+				user = User.find(params[:user_id])
+				if user.admin?
+					true
+				else
+					return render json: { error: { message: 'unauthorized user' }}, status: :unauthorized
+				end
+			end
 
 			def set_item
 				@item = Item.find(params[:id])
